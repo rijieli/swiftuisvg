@@ -1,0 +1,169 @@
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+body {
+    background-color: #fff;
+    color: #000;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 16px;
+    line-height: 1.4;
+    padding-top: 1px;
+}
+
+main {
+    margin: 5vw auto 0 auto;
+    width: 90vw;
+}
+
+code {
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+a {
+    color: #000;
+}
+
+p {
+    margin: 0;
+    max-width: 40em;
+}
+
+p + * {
+    margin-top: 1em;
+}
+
+a:hover,
+a:active {
+    color: #000;
+}
+
+.h1,
+.h2,
+.h3 {
+    line-height: 1.1;
+    letter-spacing: 0.03em;
+    margin: 0 0 1em 0;
+}
+
+.h2,
+.h3 {
+    font-weight: 500;
+}
+
+.h1 {
+    border-top: 6px solid #000;
+    font-size: 3rem;
+    padding: 0.4em 0 0 0;
+}
+
+.h2 {
+    font-size: 2.25rem;
+}
+
+.h3 {
+    font-size: 1.5rem;
+}
+
+.h4 {
+    font-size: 1.25rem;
+    text-transform: uppercase;
+}
+
+footer {
+    font-size: 0.618rem;
+    margin: 0.5em 0;
+}
+
+svg {
+    fill: #000;
+}
+
+.io {
+    margin-top: 1em;
+}
+
+.input,
+.output {
+    border: 1px solid #000;
+    border-radius: 3px;
+    color: #000;
+    display: block;
+    font-family: monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    height: 50vh;
+    line-height: 1.4;
+    max-height: 300px;
+    padding: 0.5em 0.9em;
+    width: 100%;
+    white-space: pre-wrap;
+}
+
+.output {
+    background-color: #fafafa;
+    overflow: scroll;
+    margin-top: 1em;
+}
+
+@media (min-width: 768px) {
+    main {
+        margin-top: 2vw;
+    }
+
+    .text,
+    .io {
+        display: inline-block;
+        margin-top: 0;
+        width: calc(50% - 12px);
+        vertical-align: top;
+    }
+
+    .text {
+        margin-right: 19px;
+    }
+
+    .input,
+    .output {
+        height: 30vh;
+    }
+}
+
+.button-group {
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+.generate-button {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    opacity: 1;
+    background-color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    
+    &:active {
+      transform: translateY(1px);
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
+    }
+  
+    &.copied {
+      background-color: black;
+      color: white;
+    }
+  
+  }

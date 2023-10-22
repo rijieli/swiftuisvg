@@ -1,0 +1,65 @@
+{
+  "name": "swiftvg",
+  "version": "1.0.0",
+  "description": "Convert SVG path data to a Swift 3 UIBezierPath",
+  "main": "index.js",
+  "bin": "./bin/cmd.js",
+  "engines": {
+    "node": ">= 4.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:browser && npm run build:site",
+    "build:browser": "browserify index.js -s swiftvg | terser -c > bundle.js ",
+    "build:site": "browserify site/main.js -s swiftvg | terser -c > site/bundle.js ",
+    "test": "npm run test:coverage",
+    "test:coverage": "nyc --reporter=lcov --reporter=text npm run test:unit",
+    "test:unit": "mocha test.js",
+    "jekyll": "npm run build && bundle exec jekyll serve"
+  },
+  "keywords": [
+    "swift",
+    "svg",
+    "path",
+    "bezier",
+    "curve",
+    "arc",
+    "uibezierpath",
+    "uikit"
+  ],
+  "author": "Mike Engel <mike@mike-engel.com>",
+  "license": "MIT",
+  "dependencies": {
+    "parse-svg-path": "^0.1.2",
+    "ramda": "^0.27.0",
+    "terser": "^4.6.7"
+  },
+  "devDependencies": {
+    "browserify": "^16.5.0",
+    "chai": "^4.0.1",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8",
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.0",
+    "prettier": "^2.0.0"
+  },
+  "prettier": {
+    "useTabs": true
+  },
+  "husky": {
+    "hooks": {
+      "precommit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,md,json}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "nyc": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  }
+}

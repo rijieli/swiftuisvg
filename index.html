@@ -1,0 +1,62 @@
+---
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="description"
+			content="SwiftUISVG — Convert SVG path data to SwiftUI Shape"
+		/>
+		<link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
+		<title>
+			SwiftUISVG &ndash; Convert SVG path data to a SwiftUI Shape
+		</title>
+
+		<style></style>
+	</head>
+	<body>
+		<main>
+			<h1 class="h1">
+				SwiftUISVG
+			</h1>
+			<section class="text">
+				<h2 class="h3">
+					Convert SVG path data to a SwiftUI Shape
+				</h2>
+				<p>
+					<code>SwiftUISVG</code> is a little tool written in javascript to help
+					you convert your vector <code>SVG</code> images into SwiftUI
+					<code>Shape</code> or <code>Path</code>. Paste the svg string, your
+					code is generated for you.
+				</p>
+				<p>
+					The code is based on Mike Engel's
+					<a href="https://swiftvg.mike-engel.com">swiftvg</a>, and open source
+					(MIT) on <a href="https://github.com/rijieli/swiftuisvg">Github</a>.
+					Check it out, maybe.
+				</p>
+			</section>
+
+			<section class="io">
+				<div class="button-group">
+					<button id="generate-path" class="generate-button">
+						Generate Path
+					</button>
+					<button id="generate-shape" class="generate-button">
+						Generate Shape
+					</button>
+				</div>
+				<textarea
+					class="input"
+					data-hook="input"
+					placeholder="Your `SVG` string goes here."
+				></textarea>
+				<textarea class="output" data-hook="output" readonly></textarea>
+			</section>
+			{% include footer.html %}
+		</main>
+		<script src="site/bundle.js"></script>
+	</body>
+</html>
