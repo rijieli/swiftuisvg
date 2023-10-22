@@ -104,10 +104,20 @@ const convertArcXY = (a) => {
 };
 
 // beginShape :: Nothing -> String
-const beginShape = always("let shape = UIBezierPath()");
+const beginShape = (n) => {
+	return `struct SVGShape${n}: Shape {
+    func path(in rect: CGRect) -> Path {
+        var shape = Path()`;
+};
+
+const beginPath = (n) => {
+	return `let shape${n} = UIBezierPath()`;
+};
 
 // endShape :: String
-const endShape = "shape.close()";
+const endShape = `        shape.closeSubpath()
+        return shape
+    }\n}`;
 
 // cgPoint :: Object -> String
 const cgPoint = (a) => {
@@ -121,7 +131,28 @@ const convertMove = (a) => {
 
 // convertLine :: String -> String
 const convertLine = (a) => {
-	return `\nshape.addLine(to: ${a})`;
+	return `shape.addLine(to: ${a})`;
+};
+
+// convertCubicCurve :: Object -> String
+const convertCubicCurveU = (a) => {
+	const anchorPoint = pipe(
+		converge(pair, [prop("x"), prop("y")]),
+		convertXY,
+		cgPoint
+	)(a);
+	const controlPointOne = pipe(
+		converge(pair, [prop("cp1x"), prop("cp1y")]),
+		convertXY,
+		cgPoint
+	)(a);
+	const controlPointTwo = pipe(
+		converge(pair, [prop("cp2x"), prop("cp2y")]),
+		convertXY,
+		cgPoint
+	)(a);
+
+	return `shape.addCurve(to: ${anchorPoint}, controlPoint1: ${controlPointOne}, controlPoint2: ${controlPointTwo})`;
 };
 
 // convertCubicCurve :: Object -> String
@@ -142,7 +173,7 @@ const convertCubicCurve = (a) => {
 		cgPoint
 	)(a);
 
-	return `shape.addCurve(to: ${anchorPoint}, controlPoint1: ${controlPointOne}, controlPoint2: ${controlPointTwo})`;
+	return `shape.addCurve(to: ${anchorPoint}, control1: ${controlPointOne}, control2: ${controlPointTwo})`;
 };
 
 // convertQuadraticCurve :: Object -> String
@@ -279,9 +310,9 @@ const processPathData = (a) => {
 				convertArc
 			)(a);
 		case "Z":
-			return endShape;
+			return undefined;
 		default:
-			return `SVG parsing for ${head(a)} data isn't supported yet`;
+			return `// SVG parsing for ${head(a)} data isn't supported yet`;
 	}
 };
 
@@ -300,13 +331,19 @@ const getPathsByAttribute = (svgText) => {
 // swiftvg :: String -> Array String
 module.exports = (pathData, mode) => {
 	let allPaths = getPathsByAttribute(pathData);
-	// Use R.map to transform the 'd' attribute of each path
-	const processedResults = R.map((pathNode) => {
+
+	const processedResults = R.addIndex(R.map)((pathNode, index) => {
 		const dAttribute = pathNode.getAttribute("d");
-		return pipe(parse, convertPoints, prepend(beginShape()))(dAttribute);
+
+		const pathDrawing = pipe(
+			parse,
+			convertPoints,
+			R.reject(R.isNil)
+		)(dAttribute).map((line) => "        " + line);
+
+		return pipe(prepend(beginShape(index)), append(endShape))(pathDrawing);
 	}, allPaths);
-	processedResults.map((e) => e.join("\n\n")).map((e) => console.log(e));
-	// Return the processed results
+
 	return processedResults.map((e) => e.join("\n"));
 };
 
