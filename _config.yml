@@ -21,8 +21,8 @@
 title: SwiftUISVG
 email: rijie.li@outlook.com
 description: Convert SVG path data to SwiftUI Shape
-baseurl: "/swiftsvg" # the subpath of your site, e.g. /blog
-url: "https://roger.zon/swiftsvg"
+baseurl: "/swiftuisvg" # the subpath of your site, e.g. /blog
+url: "https://roger.zone/swiftsvg"
 site_icon_text: SVG
 author: Roger
 lang: en_US
