@@ -23,7 +23,6 @@ email: rijie.li@outlook.com
 description: Convert SVG path data to SwiftUI Shape
 baseurl: "/swiftuisvg" # the subpath of your site, e.g. /blog
 url: "https://roger.zone/swiftuisvg"
-site_icon_text: SVG
 author: Roger
 lang: en_US
 twitter:
@@ -40,7 +39,7 @@ social:
 
 timezone: Asia/Shanghai
 
-# google_analytics: G-0KQD3KZVDJ
+google_analytics: G-0KQD3KZVDJ
 # copyright_text: Roger Lee
 # theme: minima
 
