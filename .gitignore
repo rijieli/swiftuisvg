@@ -10,3 +10,5 @@ node_modules/
 _site
 
 .sass-cache
+.env
+*.css.map

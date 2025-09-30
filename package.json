@@ -8,13 +8,9 @@
     "node": ">= 4.0.0"
   },
   "scripts": {
-    "build": "npm run build:browser && npm run build:site",
-    "build:browser": "browserify index.js -s swiftvg | terser -c > bundle.js ",
-    "build:site": "browserify site/main.js -s swiftvg | terser -c > site/bundle.js ",
-    "test": "npm run test:coverage",
-    "test:coverage": "nyc --reporter=lcov --reporter=text npm run test:unit",
-    "test:unit": "mocha test.js",
-    "jekyll": "npm run build && bundle exec jekyll serve"
+    "build": "browserify index.js -s swiftvg | terser -c > bundle.js && browserify site/main.js -s swiftvg | terser -c > site/bundle.js && sass assets/main.scss:assets/main.css && cp index.new.html index.html",
+    "preview": "npm run build && http-server -p 8080 -c-1",
+    "publish": "npm run build && git add . && git commit -m \"Build for publishing\" && git push origin main"
   },
   "keywords": [
     "swift",
@@ -36,11 +32,13 @@
   "devDependencies": {
     "browserify": "^16.5.0",
     "chai": "^4.0.1",
+    "http-server": "^14.1.1",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.8",
     "mocha": "^7.1.1",
     "nyc": "^15.0.0",
-    "prettier": "^2.0.0"
+    "prettier": "^2.0.0",
+    "sass": "^1.93.2"
   },
   "prettier": {
     "useTabs": true
