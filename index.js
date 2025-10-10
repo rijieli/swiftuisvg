@@ -103,9 +103,11 @@ const convertArcXY = (a) => {
 	return { x, y, rx, ry, cw };
 };
 
-// beginShape :: Nothing -> String
-const beginShape = (n) => {
+// beginShape :: Number -> Number -> Number -> String
+const beginShape = (n, width, height) => {
 	return `struct SVGShape${n}: Shape {
+    static let intrinsicSize = CGSize(width: ${width}, height: ${height})
+    
     func path(in rect: CGRect) -> Path {
         var shape = Path()`;
 };
@@ -321,30 +323,122 @@ const convertPoints = (a) => {
 	return a.map(processPathData);
 };
 
-const getPathsByAttribute = (svgText) => {
-	const parser = new DOMParser();
-	const svgDoc = parser.parseFromString(svgText, "image/svg+xml");
-	const pathElements = svgDoc.querySelectorAll(`path[d]`);
+const getSVGElements = (svgText) => {
+	// Split the input by SVG tags to handle multiple SVGs
+	const svgRegex = /<svg[^>]*>[\s\S]*?<\/svg>/gi;
+	const svgMatches = svgText.match(svgRegex) || [];
+	
+	// Parse each SVG block separately
+	return svgMatches.map(svgBlock => {
+		const parser = new DOMParser();
+		const svgDoc = parser.parseFromString(svgBlock, "image/svg+xml");
+		return svgDoc.querySelector('svg');
+	}).filter(svg => svg !== null);
+};
+
+const getPathsByAttribute = (svgElement) => {
+	const pathElements = svgElement.querySelectorAll(`path[d]`);
 	return Array.from(pathElements);
+};
+
+const getSVGDimensions = (svgElement) => {
+	// Try to get width and height from attributes
+	let width = parseFloat(svgElement.getAttribute('width') || 0);
+	let height = parseFloat(svgElement.getAttribute('height') || 0);
+	
+	// If width/height are not set, try to get from viewBox
+	if (width === 0 || height === 0) {
+		const viewBox = svgElement.getAttribute('viewBox');
+		if (viewBox) {
+			const viewBoxValues = viewBox.split(/\s+|,/);
+			if (viewBoxValues.length >= 4) {
+				width = parseFloat(viewBoxValues[2]) || width;
+				height = parseFloat(viewBoxValues[3]) || height;
+			}
+		}
+	}
+	
+	// Default to 100x100 if no dimensions found
+	return {
+		width: width || 100,
+		height: height || 100
+	};
+};
+
+const convertRectToPath = (rectElement) => {
+	const x = parseFloat(rectElement.getAttribute('x') || 0);
+	const y = parseFloat(rectElement.getAttribute('y') || 0);
+	const width = parseFloat(rectElement.getAttribute('width') || 0);
+	const height = parseFloat(rectElement.getAttribute('height') || 0);
+	
+	// Convert rect to path data
+	const pathData = `M${x},${y} L${x + width},${y} L${x + width},${y + height} L${x},${y + height} Z`;
+	
+	// Create a temporary path element with the converted data
+	const pathElement = document.createElement('path');
+	pathElement.setAttribute('d', pathData);
+	return pathElement;
+};
+
+const convertCircleToPath = (circleElement) => {
+	const cx = parseFloat(circleElement.getAttribute('cx') || 0);
+	const cy = parseFloat(circleElement.getAttribute('cy') || 0);
+	const r = parseFloat(circleElement.getAttribute('r') || 0);
+	
+	// Convert circle to path data using cubic bezier curves
+	const pathData = `M${cx - r},${cy} A${r},${r} 0 1,1 ${cx + r},${cy} A${r},${r} 0 1,1 ${cx - r},${cy} Z`;
+	
+	// Create a temporary path element with the converted data
+	const pathElement = document.createElement('path');
+	pathElement.setAttribute('d', pathData);
+	return pathElement;
+};
+
+const getAllShapeElements = (svgElement) => {
+	const allShapes = [];
+	
+	// Get all path elements
+	const pathElements = svgElement.querySelectorAll(`path[d]`);
+	pathElements.forEach(path => allShapes.push(path));
+	
+	// Get all rect elements and convert them to paths
+	const rectElements = svgElement.querySelectorAll(`rect`);
+	rectElements.forEach(rect => allShapes.push(convertRectToPath(rect)));
+	
+	// Get all circle elements and convert them to paths
+	const circleElements = svgElement.querySelectorAll(`circle`);
+	circleElements.forEach(circle => allShapes.push(convertCircleToPath(circle)));
+	
+	return allShapes;
 };
 
 // swiftvg :: String -> Array String
 module.exports = (pathData, mode) => {
-	let allPaths = getPathsByAttribute(pathData);
+	const svgElements = getSVGElements(pathData);
+	let allResults = [];
 
-	const processedResults = R.addIndex(R.map)((pathNode, index) => {
-		const dAttribute = pathNode.getAttribute("d");
+	svgElements.forEach((svgElement, svgIndex) => {
+		const allShapes = getAllShapeElements(svgElement);
+		const dimensions = getSVGDimensions(svgElement);
 
-		const pathDrawing = pipe(
-			parse,
-			convertPoints,
-			R.reject(R.isNil)
-		)(dAttribute).map((line) => "        " + line);
+		const processedResults = R.addIndex(R.map)((shapeNode, shapeIndex) => {
+			const dAttribute = shapeNode.getAttribute("d");
 
-		return pipe(prepend(beginShape(index)), append(endShape))(pathDrawing);
-	}, allPaths);
+			const pathDrawing = pipe(
+				parse,
+				convertPoints,
+				R.reject(R.isNil)
+			)(dAttribute).map((line) => "        " + line);
 
-	return processedResults.map((e) => e.join("\n"));
+			// Use a combination of SVG index and shape index for unique shape names
+			const uniqueShapeIndex = svgIndex * 100 + shapeIndex;
+			return pipe(prepend(beginShape(uniqueShapeIndex, dimensions.width, dimensions.height)), append(endShape))(pathDrawing);
+		}, allShapes);
+
+		allResults = allResults.concat(processedResults.map((e) => e.join("\n")));
+	});
+
+	return allResults;
 };
 
 module.exports.SET_ABSOLUTE = SET_ABSOLUTE;

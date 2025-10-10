@@ -27,6 +27,10 @@ const updateShape = (evt) => {
 buttonShape.addEventListener("click", updateShape);
 // buttonPath.addEventListener("click", updatePath);
 
-inputEl.value = `<svg width="26" height="7" viewBox="0 0 26 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M26 3V0H0V3H6.45454C7.74219 3 8.95469 3.60625 9.72727 4.63636C11.3636 6.81818 14.6364 6.81818 16.2727 4.63636C17.0453 3.60625 18.2578 3 19.5455 3H26Z" fill="#D9D9D9"/>
+inputEl.value = `<svg width="100" height="60" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="10" y="10" width="80" height="40" fill="#007AFF" stroke="#000" stroke-width="2"/>
+</svg>
+
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="40" cy="40" r="30" fill="#FF3B30" stroke="#000" stroke-width="2"/>
 </svg>`;
