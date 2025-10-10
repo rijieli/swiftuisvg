@@ -416,12 +416,13 @@ const getAllShapeElements = (svgElement) => {
 module.exports = (pathData, mode) => {
 	const svgElements = getSVGElements(pathData);
 	let allResults = [];
+	let globalShapeIndex = 0;
 
 	svgElements.forEach((svgElement, svgIndex) => {
 		const allShapes = getAllShapeElements(svgElement);
 		const dimensions = getSVGDimensions(svgElement);
 
-		const processedResults = R.addIndex(R.map)((shapeNode, shapeIndex) => {
+		const processedResults = R.map((shapeNode) => {
 			const dAttribute = shapeNode.getAttribute("d");
 
 			const pathDrawing = pipe(
@@ -430,9 +431,9 @@ module.exports = (pathData, mode) => {
 				R.reject(R.isNil)
 			)(dAttribute).map((line) => "        " + line);
 
-			// Use a combination of SVG index and shape index for unique shape names
-			const uniqueShapeIndex = svgIndex * 100 + shapeIndex;
-			return pipe(prepend(beginShape(uniqueShapeIndex, dimensions.width, dimensions.height)), append(endShape))(pathDrawing);
+			// Use sequential global index for shape names
+			const currentShapeIndex = globalShapeIndex++;
+			return pipe(prepend(beginShape(currentShapeIndex, dimensions.width, dimensions.height)), append(endShape))(pathDrawing);
 		}, allShapes);
 
 		allResults = allResults.concat(processedResults.map((e) => e.join("\n")));
