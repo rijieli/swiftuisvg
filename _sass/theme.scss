@@ -30,8 +30,8 @@ body {
 
 main {
     margin: 0 auto;
-    width: 90vw;
-    max-width: 1200px;
+    width: 92vw;
+    max-width: 1400px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -169,6 +169,7 @@ svg {
     margin-top: 0;
     flex: 1;
     min-height: 0;
+    position: relative;
 }
 
 .input,
@@ -195,6 +196,7 @@ svg {
     }
 }
 
+
 .output {
     background-color: #f5f5f7;
     border-color: #e5e5e7;
@@ -206,33 +208,32 @@ svg {
     }
 }
 
-.button-group {
-    padding: 0;
-    margin-bottom: 1rem;
-}
-
 .generate-button {
-    padding: 12px 24px;
+    position: absolute;
+    bottom: 16px;
+    right: calc(50% + 0.5em + 16px);
+    padding: 10px 20px;
     cursor: pointer;
-    font-size: 17px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 500;
     background-color: #0071e3;
     color: white;
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     transition: all 0.2s ease;
     letter-spacing: -0.022em;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+    z-index: 10;
     
     &:hover {
         background-color: #0077ed;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+        box-shadow: 0 4px 12px rgba(0, 113, 227, 0.4);
     }
     
     &:active {
         transform: translateY(0);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
     }
   
     &.copied {
@@ -300,10 +301,15 @@ svg {
     .generate-button {
         background-color: #0071e3;
         color: white;
+        box-shadow: 0 2px 8px rgba(0, 113, 227, 0.4);
         
         &:hover {
             background-color: #0077ed;
-            box-shadow: 0 4px 12px rgba(0, 113, 227, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 113, 227, 0.5);
+        }
+        
+        &:active {
+            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.4);
         }
         
         &.copied {
