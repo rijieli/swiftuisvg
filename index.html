@@ -18,26 +18,24 @@
 	</head>
 	<body>
 		<main>
-			<h1 class="h1">
-				SwiftUISVG
-			</h1>
-			<section class="text">
-				<h2 class="h3">
-					Convert SVG path data to a SwiftUI Shape
-				</h2>
-				<p>
-					<code>SwiftUISVG</code> is a little tool written in javascript to help
-					you convert your vector <code>SVG</code> images into SwiftUI
-					<code>Shape</code> or <code>Path</code>. Paste the svg string, your
-					code is generated for you.
-				</p>
-				<p>
-					The code is open source (MIT) on
-					<a href="https://github.com/rijieli/swiftuisvg">Github</a>.
-				</p>
+			<section class="hero">
+				<header class="header">
+					<h1 class="h1">SwiftUISVG</h1>
+					<p class="subtitle">Convert SVG to SwiftUI Shape</p>
+				</header>
+				
+				<div class="description">
+					<p>
+						<code>SwiftUISVG</code> is a little tool written in javascript to help
+						you convert your vector <code>SVG</code> images into SwiftUI
+						<code>Shape</code> or <code>Path</code>. Paste the svg string, your
+						code is generated for you. The code is open source (MIT) on
+						<a href="https://github.com/rijieli/swiftuisvg">Github</a>.
+					</p>
+				</div>
 			</section>
 
-			<section class="io">
+			<section class="io-container">
 				<div class="button-group">
 					<!-- <button id="generate-path" class="generate-button">
 						Generate Path
@@ -46,21 +44,24 @@
 						Generate Shape
 					</button>
 				</div>
-				<textarea
-					class="input"
-					data-hook="input"
-					placeholder="Your `SVG` string goes here."
-					spellcheck="false"
-				></textarea>
-				<textarea
-					class="output"
-					data-hook="output"
-					spellcheck="false"
-					readonly
-				></textarea>
+				<div class="io">
+					<textarea
+						class="input"
+						data-hook="input"
+						placeholder="Your `SVG` string goes here."
+						spellcheck="false"
+					></textarea>
+					<textarea
+						class="output"
+						data-hook="output"
+						spellcheck="false"
+						readonly
+					></textarea>
+				</div>
 			</section>
-			{% include footer.html %}
 		</main>
+		
+		{% include footer.html %}
 		<script src="site/bundle.js"></script>
 	</body>
 </html>
