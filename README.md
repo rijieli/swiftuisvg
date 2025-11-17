@@ -1,10 +1,9 @@
-# swiftvg
+# SwiftUI SVG
 
-> Convert SVG path data to a Swift 3 UIBezierPath
+> Convert SVG path data to a SwiftUI Path
 
-[![Build Status](https://travis-ci.org/mike-engel/swiftvg.svg?branch=master)](https://travis-ci.org/mike-engel/swiftvg)
-[![npm](https://img.shields.io/npm/l/swiftvg.svg)](https://npmjs.com/package/swiftvg)
-[![codecov](https://codecov.io/gh/mike-engel/swiftvg/branch/master/graph/badge.svg)](https://codecov.io/gh/mike-engel/swiftvg)
+[![SwiftUISVG](https://img.shields.io/badge/SwiftUISVG-PRODUCTION_READY-blue?style=for-the-badge&logo=swift)](https://roger.zone/swiftuisvg/)
+
 
 # Why?
 
