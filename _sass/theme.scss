@@ -196,6 +196,12 @@ svg {
     }
 }
 
+.input.drag-over {
+    border-color: #0071e3;
+    background-color: rgba(0, 113, 227, 0.05);
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);
+}
+
 
 .output {
     background-color: #f5f5f7;
@@ -291,6 +297,12 @@ svg {
             border-color: #0071e3;
             box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);
         }
+    }
+    
+    .input.drag-over {
+        border-color: #0071e3;
+        background-color: rgba(0, 113, 227, 0.1);
+        box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.3);
     }
     
     .output {
