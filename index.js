@@ -375,7 +375,8 @@ const convertRectToPath = (rectElement) => {
 	const pathData = `M${x},${y} L${x + width},${y} L${x + width},${y + height} L${x},${y + height} Z`;
 	
 	// Create a temporary path element with the converted data
-	const pathElement = document.createElement('path');
+	const doc = rectElement.ownerDocument || document;
+	const pathElement = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
 	pathElement.setAttribute('d', pathData);
 	return pathElement;
 };
@@ -389,7 +390,46 @@ const convertCircleToPath = (circleElement) => {
 	const pathData = `M${cx - r},${cy} A${r},${r} 0 1,1 ${cx + r},${cy} A${r},${r} 0 1,1 ${cx - r},${cy} Z`;
 	
 	// Create a temporary path element with the converted data
-	const pathElement = document.createElement('path');
+	const doc = circleElement.ownerDocument || document;
+	const pathElement = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
+	pathElement.setAttribute('d', pathData);
+	return pathElement;
+};
+
+const convertPolygonToPath = (polygonElement) => {
+	const pointsAttr = polygonElement.getAttribute('points') || '';
+	
+	if (!pointsAttr) {
+		return null;
+	}
+	
+	// Parse points - can be space or comma separated: "x1 y1 x2 y2" or "x1,y1 x2,y2"
+	// First normalize by replacing commas with spaces, then split
+	const normalized = pointsAttr.replace(/,/g, ' ');
+	const coords = normalized.trim().split(/\s+/).filter(s => s.length > 0);
+	
+	if (coords.length < 2 || coords.length % 2 !== 0) {
+		// Need at least one point (x, y) and must have even number of coordinates
+		return null;
+	}
+	
+	// Build path data: Move to first point, then line to each subsequent point, close
+	let pathData = '';
+	for (let i = 0; i < coords.length; i += 2) {
+		const x = coords[i];
+		const y = coords[i + 1];
+		if (i === 0) {
+			pathData += `M${x},${y}`;
+		} else {
+			pathData += ` L${x},${y}`;
+		}
+	}
+	pathData += ' Z'; // Close the path
+	
+	// Create a temporary path element with the converted data
+	// Use the ownerDocument of the polygon element to ensure proper context
+	const doc = polygonElement.ownerDocument || document;
+	const pathElement = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
 	pathElement.setAttribute('d', pathData);
 	return pathElement;
 };
@@ -408,6 +448,13 @@ const getAllShapeElements = (svgElement) => {
 	// Get all circle elements and convert them to paths
 	const circleElements = svgElement.querySelectorAll(`circle`);
 	circleElements.forEach(circle => allShapes.push(convertCircleToPath(circle)));
+	
+	// Get all polygon elements and convert them to paths
+	const polygonElements = svgElement.querySelectorAll(`polygon`);
+	polygonElements.forEach(polygon => {
+		const converted = convertPolygonToPath(polygon);
+		if (converted) allShapes.push(converted);
+	});
 	
 	return allShapes;
 };

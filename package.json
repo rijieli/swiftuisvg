@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "concurrently \"nodemon --watch site/main.js --watch index.js --exec 'browserify site/main.js -s swiftvg | terser -c > site/bundle.js'\" \"bundle exec jekyll serve\"",
-    "publish": "browserify index.js -s swiftvg | terser -c > bundle.js && browserify site/main.js -s swiftvg | terser -c > site/bundle.js"
+    "publish": "browserify site/main.js -s swiftvg | terser -c > site/bundle.js"
   },
   "keywords": [
     "swift",
